@@ -4,9 +4,9 @@ import os
 import threading
 
 from converter.lyx_converter import LyxConverter
-from config_manager import ConfigManager
-from logger import Logger
-from error_handler import ErrorHandler
+from config.config_manager import ConfigManager
+from logging_utils.logger import Logger
+from logging_utils.error_handler import ErrorHandler
 
 from gui_frames.config_frame import ConfigFrame
 from gui_frames.io_frame import IOFrame
@@ -105,7 +105,8 @@ class LyxConverterApp(tk.Tk):
             # Use the new LyxConverter class
             converter = LyxConverter(
                 lyx_executable=config_paths["lyx_executable"],
-                pandoc_executable=config_paths["pandoc_executable"]
+                pandoc_executable=config_paths["pandoc_executable"],
+                logger=self.logger
             )
             markdown_file = converter.convert(lyx_file_path=lyx_file, output_directory=output_dir)
 
