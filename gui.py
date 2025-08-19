@@ -3,7 +3,7 @@ from tkinter import ttk, filedialog, messagebox
 import os
 import threading
 
-from main import lyx_to_markdown
+from converter.lyx_converter import LyxConverter
 from config_manager import ConfigManager
 from logger import Logger
 from error_handler import ErrorHandler
@@ -89,28 +89,25 @@ class LyxConverterApp(tk.Tk):
         config_paths = self.config_frame.get_paths()
         io_paths = self.io_frame.get_paths()
         
-        paths = {**config_paths, **io_paths}
-        paths["lyx_file"] = paths.pop("last_lyx_file")
-        paths["output_dir"] = paths.pop("last_output_dir")
+        lyx_file = io_paths.get("last_lyx_file")
+        output_dir = io_paths.get("last_output_dir")
 
-        if not all(p for p in paths.values() if p):
+        if not all([config_paths.get("lyx_executable"), config_paths.get("pandoc_executable"), lyx_file, output_dir]):
             self.error_handler.handle_exception(ValueError("All paths must be specified."))
             messagebox.showerror("Error", "All paths must be specified.")
             self.action_frame.set_button_state("normal")
             return
 
-        for path, name in [(paths["lyx_executable"], "LyX"), (paths["pandoc_executable"], "Pandoc"), (paths["lyx_file"], "Input file")]:
-            if not os.path.exists(path):
-                self.error_handler.handle_exception(FileNotFoundError(f"{name} not found at path: {path}"))
-                messagebox.showerror("Error", f"{name} not found at the specified path:\n{path}")
-                self.action_frame.set_button_state("normal")
-                return
-
         try:
-            self.status_frame.log(f"Starting conversion for: {os.path.basename(paths['lyx_file'])}...")
-            self.logger.info(f"Conversion arguments: {paths}")
+            self.status_frame.log(f"Starting conversion for: {os.path.basename(lyx_file)}...")
+            self.logger.info(f"Conversion arguments: {config_paths}, {io_paths}")
 
-            markdown_file = lyx_to_markdown(**paths)
+            # Use the new LyxConverter class
+            converter = LyxConverter(
+                lyx_executable=config_paths["lyx_executable"],
+                pandoc_executable=config_paths["pandoc_executable"]
+            )
+            markdown_file = converter.convert(lyx_file_path=lyx_file, output_directory=output_dir)
 
             self.status_frame.log(f"\nSuccess! Markdown file created at:")
             self.status_frame.log(markdown_file)
