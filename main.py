@@ -4,12 +4,19 @@ import subprocess
 
 def export_lyx_to_tex(lyx_path, tex_output_path, lyx_executable):
     """Exports a LyX file to LaTeX (.tex) using a specified executable."""
-    subprocess.run(
+    # Capture output to see potential errors from LyX
+    result = subprocess.run(
         [lyx_executable, "--export", "latex", lyx_path],
-        check=True,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        capture_output=True, text=True
     )
+
+    # If LyX reports an error, raise it with the detailed message
+    if result.returncode != 0:
+        raise subprocess.CalledProcessError(
+            result.returncode, result.args, 
+            output=result.stdout, stderr=result.stderr
+        )
+
     original_tex_path = os.path.splitext(lyx_path)[0] + ".tex"
     if os.path.abspath(original_tex_path) != os.path.abspath(tex_output_path):
         if os.path.exists(original_tex_path):
@@ -83,8 +90,12 @@ def lyx_to_markdown(lyx_file_path, output_directory, lyx_executable, pandoc_exec
 
         print(f"Markdown file created: {markdown_file_path}")
         return markdown_file_path
-    except (subprocess.CalledProcessError, FileNotFoundError) as e:
-        raise RuntimeError(f"Conversion failed: {e}")
+    except FileNotFoundError as e:
+        raise RuntimeError(f"Conversion failed: A file was not found. {e}")
+    except subprocess.CalledProcessError as e:
+        # Include the detailed error from the LyX command in the exception
+        error_message = e.stderr or e.stdout or "No error output from command."
+        raise RuntimeError(f"Conversion failed. The command '{' '.join(e.cmd)}' failed with exit code {e.returncode}.\n\nUnderlying error:\n---\n{error_message.strip()}\n---")
     finally:
         cleanup_files(cp1255_tex_path, utf8_tex_path)
 

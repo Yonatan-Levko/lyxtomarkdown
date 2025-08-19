@@ -1,11 +1,12 @@
 # LyX to Markdown Converter
 
-This script converts LyX files (.lyx) to clean, readable Markdown files (.md). It is designed to handle LyX files written in Hebrew with CP1255 encoding and correctly process mathematical formulas.
+This project provides a tool with a graphical user interface (GUI) to convert LyX files (.lyx) to clean, readable Markdown files (.md). It is designed to handle LyX files written in Hebrew with CP1255 encoding and correctly process mathematical formulas.
 
 The conversion is a multi-step process that uses LyX for LaTeX export and Pandoc for the final conversion to Markdown, with several cleaning and formatting steps in between.
 
 ## Features
 
+-   **Graphical User Interface** for easy operation.
 -   Converts `.lyx` files to `.md`.
 -   Handles `CP1255` (Hebrew) encoding and converts it to `UTF-8`.
 -   Uses **LyX** to export to LaTeX and **Pandoc** for robust Markdown conversion.
@@ -16,65 +17,68 @@ The conversion is a multi-step process that uses LyX for LaTeX export and Pandoc
 
 ## Prerequisites
 
-This script relies on external command-line tools. You must have the following software installed on your system:
+This tool relies on external command-line programs. You must have the following software installed on your system:
 
-1.  **LyX**: A document processor. The script requires the LyX executable to be available. You can download it from [lyx.org](https://www.lyx.org/Download).
+1.  **LyX**: A document processor. You can download it from [lyx.org](https://www.lyx.org/Download).
 2.  **Pandoc**: A universal document converter. You can find installation instructions at [pandoc.org/installing.html](https://pandoc.org/installing.html). On macOS, it is easily installed with Homebrew:
     ```bash
     brew install pandoc
     ```
 
-## Configuration
+## Usage (GUI Mode)
 
-Before running the script, you need to configure the paths to your LyX installation, the Pandoc executable, and the input/output files.
+The recommended way to use this tool is via the graphical interface.
 
-Open the `main.py` file and modify the following:
+### 1. Run the Application
 
-1.  **LyX Executable Path**: In the `export_lyx_to_tex` function, update the path to your LyX executable.
-    ```python
-    # Example for macOS
-    subprocess.run(
-        [
-            "/Applications/LyX 2.app/Contents/MacOS/lyx", # <-- UPDATE THIS PATH
-            "--export", "latex",
-            lyx_path
-        ],
-        # ...
-    )
-    ```
+Navigate to the project directory in your terminal and run:
 
-2.  **Pandoc Executable Path**: In the `convert_tex_to_markdown` function, ensure the path to `pandoc` is correct.
-    ```python
-    # Example for macOS with Homebrew
-    subprocess.run(
-        [
-            "/opt/homebrew/bin/pandoc", # <-- UPDATE THIS PATH
-            utf8_tex_path,
-            # ...
-        ],
-        # ...
-    )
-    ```
+```bash
+python gui.py
+```
 
-3.  **Input and Output Files**: In the `main` function at the bottom of the script, set the path to your source `.lyx` file and the desired output directory.
-    ```python
-    def main():
-        # UPDATE these paths for your use case
-        lyx_file = "/path/to/your/document.lyx"
-        output_dir = "/path/to/your/output_folder"
+This will launch the application window.
 
-        # ...
-    ```
+### 2. Configure Paths
 
-## Usage
+-   **LyX Executable**: The application will try to find a default path for the LyX executable. If it's incorrect, click "Browse..." to locate it on your system.
+-   **Pandoc Executable**: Similarly, confirm the path to the Pandoc executable.
 
-Once the configuration is complete, you can run the script from your terminal:
+### 3. Select Files
+
+-   **Input LyX File**: Click "Browse..." to select the `.lyx` file you want to convert.
+-   **Output Directory**: Choose the folder where you want to save the converted `.md` file. This will default to the same directory as the input file.
+
+### 4. Convert
+
+Click the "Convert to Markdown" button. The status panel at the bottom will show the progress, and a message will appear upon completion.
+
+## Advanced Usage (Command-Line)
+
+For advanced users or for automation, you can run the conversion directly from the command line.
+
+### Configuration
+
+Open the `main.py` file and modify the configuration variables at the bottom of the script to match the paths on your system:
+
+```python
+# --- Configuration ---
+LYX_EXECUTABLE = "/Applications/LyX.app/Contents/MacOS/lyx"  # Update this
+PANDOC_EXECUTABLE = "/opt/homebrew/bin/pandoc"      # Update this
+
+# Input and output files
+lyx_file = "/path/to/your/document.lyx"             # Update this
+output_dir = "/path/to/your/output_folder"         # Update this
+# --- End of Configuration ---
+```
+
+### Run the Script
+
+Once configured, run the script from your terminal:
 
 ```bash
 python main.py
 ```
-
-The script will execute the conversion process and print the path to the final Markdown file upon successful completion. If an error occurs, it will be printed to the console.
 
 ## How It Works
 
