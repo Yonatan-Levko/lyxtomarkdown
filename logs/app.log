@@ -13,3 +13,6 @@
 2025-08-20 18:44:47,949 - LyxConverterApp - INFO - Removing intermediate file: /Users/yonatan.levko/PycharmProjects/lyxtomarkdown/newfile2_utf8.tex
 2025-08-20 18:44:47,949 - LyxConverterApp - INFO - Conversion successful. Output at: /Users/yonatan.levko/PycharmProjects/lyxtomarkdown/newfile2.md
 2025-08-20 18:45:13,344 - LyxConverterApp - INFO - Application started and configuration loaded.
+2025-08-22 09:46:55,632 - LyxConverterApp - INFO - Application started and configuration loaded.
+2025-08-22 09:48:08,845 - LyxConverterApp - INFO - Application closing, saving configuration.
+2025-08-22 09:48:13,481 - LyxConverterApp - INFO - Application closing, saving configuration.
