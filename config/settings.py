@@ -1,0 +1,8 @@
+DEFAULT_CONFIG = {
+    "paths": {
+        "lyx_executable": "/Applications/LyX.app/Contents/MacOS/lyx",
+        "pandoc_executable": "/opt/homebrew/bin/pandoc",
+        "last_lyx_file": "",
+        "last_output_dir": ""
+    }
+}

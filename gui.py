@@ -117,7 +117,7 @@ class LyxConverterApp(tk.Tk):
 
         except Exception as e:
             user_message = self.error_handler.handle_exception(e)
-            self.status_frame.log(f"\nAn error occurred. See app.log for details.")
+            self.status_frame.log(f"\nAn error occurred. See logs/app.log for details.")
             messagebox.showerror("Conversion Failed", user_message)
         finally:
             self.action_frame.set_button_state("normal")
